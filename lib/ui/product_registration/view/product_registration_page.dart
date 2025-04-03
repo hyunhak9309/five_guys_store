@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:fiveguysstore/ui/home/view_model/home_view_model.dart';
+import 'package:fiveguysstore/ui/product_registration/widget/product_image_picker.dart';
+import 'package:fiveguysstore/ui/product_registration/widget/product_text_field.dart';
+import 'package:fiveguysstore/ui/product_registration/widget/register_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -167,84 +170,36 @@ class ProductRegistrationPage extends HookConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              GestureDetector(
+              ProductImagePicker(
+                imagePath: productImagePath.value,
+                errorText: imageError.value,
                 onTap: pickImage,
-                child: Container(
-                  height: 300,
-                  width: double.infinity,
-                  color: Colors.grey[300],
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child:
-                        productImagePath.value != null
-                            ? (productImagePath.value!.startsWith('http')
-                                ? Image.network(
-                                  productImagePath.value!,
-                                  width: double.infinity,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                  errorBuilder:
-                                      (_, __, ___) => const Center(
-                                        child: Text('이미지 로드 실패'),
-                                      ),
-                                )
-                                : Image.file(
-                                  File(productImagePath.value!),
-                                  width: double.infinity,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                ))
-                            : const Center(child: Text('Image 선택')),
-                  ),
-                ),
               ),
-              if (imageError.value != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    imageError.value!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ),
               const SizedBox(height: 16),
-              TextField(
+              ProductTextField(
                 controller: nameController,
-                decoration: InputDecoration(
-                  labelText: '상품 이름',
-                  border: const OutlineInputBorder(),
-                  errorText: nameError.value,
-                ),
+                label: '상품 이름',
+                errorText: nameError.value,
               ),
               const SizedBox(height: 12),
-              TextField(
+
+              ProductTextField(
                 controller: priceController,
+                label: '상품 가격',
+                errorText: priceError.value,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: '상품 가격',
-                  border: const OutlineInputBorder(),
-                  errorText: priceError.value,
-                ),
               ),
               const SizedBox(height: 12),
-              TextField(
+
+              ProductTextField(
                 controller: descriptionController,
+                label: '상품 설명',
+                errorText: descriptionError.value,
                 maxLines: 4,
-                decoration: InputDecoration(
-                  labelText: '상품 설명',
-                  border: const OutlineInputBorder(),
-                  errorText: descriptionError.value,
-                ),
               ),
+
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: registerProduct,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(48),
-                  backgroundColor: Colors.blue, // 👉 버튼 배경 색
-                  foregroundColor: Colors.white, // 👉 텍스트 색상
-                ),
-                child: const Text('등록하기'),
-              ),
+              RegisterButton(onPressed: registerProduct),
             ],
           ),
         ),
