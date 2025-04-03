@@ -41,7 +41,7 @@ class ProductRegistrationPage extends HookConsumerWidget {
                     leading: const Icon(Icons.photo_library),
                     title: const Text('갤러리에서 선택'),
                     onTap: () async {
-                      Navigator.of(context).pop();
+                      context.pop();
                       final pickedFile = await picker.pickImage(
                         source: ImageSource.gallery,
                       );
