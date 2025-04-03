@@ -38,18 +38,13 @@ class ShoppingCartViewModel extends _$ShoppingCartViewModel {
     if (cartItemIndex != -1) {
       final currentItem = state[cartItemIndex];
       final updatedNum = plus ? currentItem.num + 1 : currentItem.num - 1;
+
       if (updatedNum > 0) {
-        final updatedCartItem = currentItem.copyWith(
-          num: updatedNum,
-          totalPrice: currentItem.totalPrice + (plus ? currentItem.product.price : -currentItem.product.price),
-        );
+        final updatedCartItem = currentItem.copyWith(num: updatedNum, totalPrice: currentItem.totalPrice + (plus ? currentItem.product.price : -currentItem.product.price));
         state = [
           for (int i = 0; i < state.length; i++)
             if (i == cartItemIndex) updatedCartItem else state[i]
         ];
-      } else {
-        // 수량이 0 이하가 되면 장바구니에서 제거
-        state = state.where((element) => element.productId != productId).toList();
       }
     }
   }
