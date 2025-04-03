@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:fiveguysstore/ui/home/view_model/home_view_model.dart';
 import 'package:fiveguysstore/ui/product_registration/widget/product_image_picker.dart';
 import 'package:fiveguysstore/ui/product_registration/widget/product_text_field.dart';
