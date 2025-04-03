@@ -1,8 +1,10 @@
+import 'package:fiveguysstore/data/entity/product_entity.dart';
 import 'package:flutter/material.dart';
 
-class ProductDetails extends StatelessWidget {
-  const ProductDetails({super.key});
+class ProductDetailsPage extends StatelessWidget {
+  const ProductDetailsPage({super.key, required this.product});
   static const path = '/product_details';
+  final ProductEntity product;
 
   @override
   Widget build(BuildContext context) {
