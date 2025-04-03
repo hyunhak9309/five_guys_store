@@ -26,8 +26,7 @@ class CartIcon extends ConsumerWidget {
               ),
             ),
           ),
-          viewModel.when(
-            data: (data)=>   Positioned(
+         Positioned(
               top : 5,
               right: 0,
               child: Container(
@@ -41,7 +40,7 @@ class CartIcon extends ConsumerWidget {
                   minHeight: 20,
                 ),
                 child: Text(
-                  data.length.toString(),
+                  viewModel.length.toString(),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -49,10 +48,7 @@ class CartIcon extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-            ),
-            error: (error, stack) => const SizedBox.shrink(),
-            loading: () => const SizedBox.shrink(),
-          ),
+            )
           ],
       ),
     );
