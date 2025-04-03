@@ -151,7 +151,16 @@ class ProductRegistrationPage extends HookConsumerWidget {
     }, []);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('상품 등록')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          '상품 등록',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.blue,
+        scrolledUnderElevation: 0,
+      ),
+
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(), // 빈 공간 터치 시 키보드 닫기
         child: SingleChildScrollView(
@@ -228,9 +237,11 @@ class ProductRegistrationPage extends HookConsumerWidget {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: registerProduct,
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
+                  backgroundColor: Colors.blue, // 👉 버튼 배경 색
+                  foregroundColor: Colors.white, // 👉 텍스트 색상
                 ),
                 child: const Text('등록하기'),
               ),

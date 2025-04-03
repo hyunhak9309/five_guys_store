@@ -20,10 +20,21 @@ class HomeViewModel extends _$HomeViewModel {
   }
 
   //추가
-  Future<void> addProduct({required String name, required double price, required String description, required String imageUrl}) async {
+  Future<void> addProduct({
+    required String name,
+    required double price,
+    required String description,
+    required String imageUrl,
+  }) async {
     state = const AsyncValue.loading().whenData((value) => value);
     state = await AsyncValue.guard(() async {
-      final product = ProductEntity(id: Uuid().v4(), name: name, price: price, description: description, image: imageUrl);
+      final product = ProductEntity(
+        id: Uuid().v4(),
+        name: name,
+        price: price,
+        description: description,
+        image: imageUrl,
+      );
       final result = [...state.value!, product];
       final productRepository = ref.read(productRepositoryProvider);
       await productRepository.updateProduct(result);
@@ -43,26 +54,4 @@ class HomeViewModel extends _$HomeViewModel {
   }
 
   //추가
-  Future<void> addProduct({required String name, required double price, required String description, required String imageUrl}) async {
-    state = const AsyncValue.loading().whenData((value) => value);
-    state = await AsyncValue.guard(() async {
-      final product = ProductEntity(id: Uuid().v4(), name: name, price: price, description: description, image: imageUrl);
-      final result = [...state.value!, product];
-      final productRepository = ref.read(productRepositoryProvider);
-      await productRepository.updateProduct(result);
-      return result;
-    });
-  }
-
-  //삭제
-  Future<void> deleteProduct(String id) async {
-    state = const AsyncValue.loading().whenData((value) => value);
-    state = await AsyncValue.guard(() async {
-      final result = state.value!.where((product) => product.id != id).toList();
-      final productRepository = ref.read(productRepositoryProvider);
-      await productRepository.updateProduct(result);
-      return result;
-    });
-  }
 }
-
