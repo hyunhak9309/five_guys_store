@@ -14,7 +14,7 @@ class ShoppingCartViewModel extends _$ShoppingCartViewModel {
     return [];
   }
 
-  void addProduct(ProductEntity product, int num) {
+  void addProduct({required ProductEntity product, required int num}) {
     // 카트에 있는지 productId로 찾아본다.
     final cartItemIndex = state.indexWhere((element) => element.productId == product.id);
     if (cartItemIndex != -1) {
