@@ -16,6 +16,30 @@ class HomeViewModel extends _$HomeViewModel {
       "HomeViewModel build : ${DateTime.now()}\n initial Products num is ${result.length}",
     );
     return result;
+    // return [];
+  }
+
+  //추가
+  Future<void> addProduct({required String name, required double price, required String description, required String imageUrl}) async {
+    state = const AsyncValue.loading().whenData((value) => value);
+    state = await AsyncValue.guard(() async {
+      final product = ProductEntity(id: Uuid().v4(), name: name, price: price, description: description, image: imageUrl);
+      final result = [...state.value!, product];
+      final productRepository = ref.read(productRepositoryProvider);
+      await productRepository.updateProduct(result);
+      return result;
+    });
+  }
+
+  //삭제
+  Future<void> deleteProduct(String id) async {
+    state = const AsyncValue.loading().whenData((value) => value);
+    state = await AsyncValue.guard(() async {
+      final result = state.value!.where((product) => product.id != id).toList();
+      final productRepository = ref.read(productRepositoryProvider);
+      await productRepository.updateProduct(result);
+      return result;
+    });
   }
 
   //추가

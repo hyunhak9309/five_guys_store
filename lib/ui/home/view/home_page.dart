@@ -1,5 +1,6 @@
 import 'package:fiveguysstore/ui/core/view/c_inkwell.dart';
 import 'package:fiveguysstore/ui/home/view/widget/cart_icon.dart';
+import 'package:fiveguysstore/ui/home/view/widget/product_list_view.dart';
 import 'package:fiveguysstore/ui/home/view_model/home_view_model.dart';
 import 'package:fiveguysstore/ui/product_registration/view/product_registration_page.dart';
 import 'package:flutter/material.dart';
@@ -16,27 +17,21 @@ class HomePage extends ConsumerWidget {
     final viewModel = ref.watch(homeViewModelProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Home'),
+        title: const Text('Home', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.blue, // 배경색 blue
+        scrolledUnderElevation: 0, // 스크롤 시 그림자 안생기도록 설정
         actions: [const CartIcon(), const SizedBox(width: 10)],
       ),
       body: viewModel.when(
-        data: (products) {
-          // TODO: products를 인자로 받는 상품 카드 위젯을 구현,
-          // TODO: 상품 카트 위젯 클릭 시, 상품 상세 페이지로 이동(인자 라우팅 이동간에 전달 필요, 필요하면 질문주세요!)
-          // TODO: products 갯수가 0일 경우 리스트 뷰 빌더가 아니라 center에 텍스트 위젯으로 상품 없는 상태 구현 필요
-          return ListView.builder(
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return Container();
-            },
-          );
-        },
-        error: (error, stack) {
-          return Center(child: Text('Error: $error'));
-        },
+        data:
+            (products) =>
+                products.isEmpty
+                    ? const Center(child: Text('상품이 없습니다.'))
+                    : ProductListView(products: products),
+        error: (error, stack) => Center(child: Text('Error: $error')),
         loading:
             () => Center(
               child: LoadingIndicator(
@@ -55,11 +50,8 @@ class HomePage extends ConsumerWidget {
         child: Container(
           width: 50,
           height: 50,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(Icons.add),
+          decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
