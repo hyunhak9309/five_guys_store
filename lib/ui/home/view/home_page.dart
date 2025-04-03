@@ -20,7 +20,7 @@ class HomePage extends ConsumerWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Home'),
+        title: const Text('Home', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.blue, // 배경색 blue
         scrolledUnderElevation: 0, // 스크롤 시 그림자 안생기도록 설정
         actions: [const CartIcon(), const SizedBox(width: 10)],
