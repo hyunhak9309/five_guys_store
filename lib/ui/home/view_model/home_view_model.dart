@@ -16,6 +16,7 @@ class HomeViewModel extends _$HomeViewModel {
       "HomeViewModel build : ${DateTime.now()}\n initial Products num is ${result.length}",
     );
     return result;
+    // return [];
   }
 
   //추가

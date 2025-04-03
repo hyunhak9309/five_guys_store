@@ -21,7 +21,7 @@ class CartIcon extends ConsumerWidget {
             child: Center(
               child: const Icon(
                 Icons.shopping_cart,
-                color: Colors.black,
+                color: Colors.white,
                 size: 30,
               ),
             ),
