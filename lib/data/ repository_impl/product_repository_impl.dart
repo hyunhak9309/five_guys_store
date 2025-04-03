@@ -16,21 +16,16 @@ class ProductRepositoryImpl extends ProductRepository {
     }
   }
 
+  
   @override
-  Future<void> addProduct(ProductEntity product) {
-    // TODO: implement addProduct
-    throw UnimplementedError();
+  Future<void> updateProduct(List<ProductEntity> products) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final productStrings = products.map((product) => jsonEncode(product.toJson())).toList();
+      await prefs.setStringList('products', productStrings);
+    } catch (e) {
+      // Handle error if necessary
+    }
   }
 
-  @override
-  Future<void> deleteProduct(String id) {
-    // TODO: implement deleteProduct
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateProduct(ProductEntity product) {
-    // TODO: implement updateProduct
-    throw UnimplementedError();
-  }
 }
