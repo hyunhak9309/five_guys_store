@@ -237,7 +237,7 @@ class ProductRegistrationPage extends HookConsumerWidget {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: registerProduct,
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
                   backgroundColor: Colors.blue, // 👉 버튼 배경 색
