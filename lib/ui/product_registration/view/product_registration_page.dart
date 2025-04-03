@@ -152,86 +152,90 @@ class ProductRegistrationPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('상품 등록')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: pickImage,
-              child: Container(
-                height: 300,
-                width: double.infinity,
-                color: Colors.grey[300],
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child:
-                      productImagePath.value != null
-                          ? (productImagePath.value!.startsWith('http')
-                              ? Image.network(
-                                productImagePath.value!,
-                                width: double.infinity,
-                                height: 150,
-                                fit: BoxFit.cover,
-                                errorBuilder:
-                                    (_, __, ___) =>
-                                        const Center(child: Text('이미지 로드 실패')),
-                              )
-                              : Image.file(
-                                File(productImagePath.value!),
-                                width: double.infinity,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              ))
-                          : const Center(child: Text('Image 선택')),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(), // 빈 공간 터치 시 키보드 닫기
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: pickImage,
+                child: Container(
+                  height: 300,
+                  width: double.infinity,
+                  color: Colors.grey[300],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child:
+                        productImagePath.value != null
+                            ? (productImagePath.value!.startsWith('http')
+                                ? Image.network(
+                                  productImagePath.value!,
+                                  width: double.infinity,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (_, __, ___) => const Center(
+                                        child: Text('이미지 로드 실패'),
+                                      ),
+                                )
+                                : Image.file(
+                                  File(productImagePath.value!),
+                                  width: double.infinity,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                ))
+                            : const Center(child: Text('Image 선택')),
+                  ),
                 ),
               ),
-            ),
-            if (imageError.value != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  imageError.value!,
-                  style: const TextStyle(color: Colors.red),
+              if (imageError.value != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    imageError.value!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: '상품 이름',
+                  border: const OutlineInputBorder(),
+                  errorText: nameError.value,
                 ),
               ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: '상품 이름',
-                border: const OutlineInputBorder(),
-                errorText: nameError.value,
+              const SizedBox(height: 12),
+              TextField(
+                controller: priceController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: '상품 가격',
+                  border: const OutlineInputBorder(),
+                  errorText: priceError.value,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: priceController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: '상품 가격',
-                border: const OutlineInputBorder(),
-                errorText: priceError.value,
+              const SizedBox(height: 12),
+              TextField(
+                controller: descriptionController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: '상품 설명',
+                  border: const OutlineInputBorder(),
+                  errorText: descriptionError.value,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: descriptionController,
-              maxLines: 4,
-              decoration: InputDecoration(
-                labelText: '상품 설명',
-                border: const OutlineInputBorder(),
-                errorText: descriptionError.value,
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: registerProduct,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                ),
+                child: const Text('등록하기'),
               ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: registerProduct,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(48),
-              ),
-              child: const Text('등록하기'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
