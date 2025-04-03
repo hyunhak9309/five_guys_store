@@ -1,10 +1,11 @@
 import 'package:fiveguysstore/ui/core/view/c_inkwell.dart';
+import 'package:fiveguysstore/ui/home/view/widget/cart_icon.dart';
 import 'package:fiveguysstore/ui/home/view_model/home_view_model.dart';
 import 'package:fiveguysstore/ui/product_registration/view/product_registration_page.dart';
-import 'package:fiveguysstore/ui/shopping_cart/view/shopping_cart_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -13,17 +14,41 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(homeViewModelProvider);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Home'),
-        actions: [
-          CInkWell(
-            onTap: () => context.push(ShoppingCartPage.path),
-            child: const Icon(Icons.shopping_cart),
-          ),
-          const SizedBox(width: 10),
-        ],
+        actions: [const CartIcon(), const SizedBox(width: 10)],
+      ),
+      body: viewModel.when(
+        data: (products) {
+          // TODO: products를 인자로 받는 상품 카드 위젯을 구현,
+          // TODO: 상품 카트 위젯 클릭 시, 상품 상세 페이지로 이동(인자 라우팅 이동간에 전달 필요, 필요하면 질문주세요!)
+          // TODO: products 갯수가 0일 경우 리스트 뷰 빌더가 아니라 center에 텍스트 위젯으로 상품 없는 상태 구현 필요
+          return ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              return Container();
+            },
+          );
+        },
+        error: (error, stack) {
+          return Center(child: Text('Error: $error'));
+        },
+        loading:
+            () => Center(
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballScaleRippleMultiple,
+
+                /// Required, The loading type of the widget
+                colors: [Colors.blue],
+                strokeWidth: 5,
+                backgroundColor: Colors.transparent,
+                pathBackgroundColor: Colors.transparent,
+              ),
+            ),
       ),
       floatingActionButton: CInkWell(
         onTap: () => context.push(ProductRegistrationPage.path),
