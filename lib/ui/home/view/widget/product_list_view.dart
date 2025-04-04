@@ -32,29 +32,26 @@ class ProductListView extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child:
-                      product.image.startsWith(
-                            'http',
-                          ) // http로 시작하면 Image.network() 사용
+                      product.image.startsWith('http')
                           ? Image.network(
                             product.image,
                             width: 60,
                             height: 60,
                             fit: BoxFit.cover,
                           )
-                          : product.image.startsWith('file://') ||
-                              product.image.startsWith(
-                                '/',
-                              ) // file 또는 /로 시작하면 Image.file() 사용. 플랫폼별 구분하려다가 코드가 길어지는 것 같아 이걸로 대체함.
+                          : product.image.startsWith('content://')
+                          // 안드로이드 중 content:// 시작 한다면?
                           ? Image.file(
-                            // File(
-                            // Platform.isIOS
-                            // ? Uri.parse(
-                            // product.image,
-                            // ).path.replaceFirst('file://', '')
-                            // : Uri.parse(
-                            // product.image,
-                            // ).path,
-                            // ),
+                            File.fromUri(Uri.parse(product.image)),
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          )
+                          : File(
+                            Uri.parse(product.image).toFilePath(),
+                          ).existsSync()
+                          // toFilePath() - 플랫폼별 파일 경로 자동 변환해주는 함수.
+                          ? Image.file(
                             File(Uri.parse(product.image).toFilePath()),
                             width: 60,
                             height: 60,
