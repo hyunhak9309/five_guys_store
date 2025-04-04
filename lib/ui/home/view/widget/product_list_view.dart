@@ -31,41 +31,7 @@ class ProductListView extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child:
-                      product.image.startsWith('http')
-                          ? Image.network(
-                            product.image,
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          )
-                          : product.image.startsWith('content://')
-                          // 안드로이드 중 content:// 시작 한다면?
-                          ? Image.file(
-                            File.fromUri(Uri.parse(product.image)),
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          )
-                          : File(
-                            Uri.parse(product.image).toFilePath(),
-                          ).existsSync()
-                          // toFilePath() - 플랫폼별 파일 경로 자동 변환해주는 함수.
-                          ? Image.file(
-                            File(Uri.parse(product.image).toFilePath()),
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          )
-                          : Image.memory(
-                            // 그 외는 Image.memory() 사용 (base64)
-                            base64Decode(product.image.split(',').last),
-                            // 이미지 파일이 base64(문자열)로 되어있어, 이를 디코딩함. convert 임포팅
-                            // data:image/jpeg;base64, 를 잘라내기 위해 split 사용
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          ),
+                  child: getImageWidget(product.image),
                 ),
                 SizedBox(width: 16),
                 Expanded(
@@ -86,5 +52,48 @@ class ProductListView extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget getImageWidget(String image) {
+    if (image.startsWith('http')) {
+      return Image.network(
+        image,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+      );
+    } else if (image.startsWith('content://')) {
+      return Image.file(
+        File.fromUri(Uri.parse(image)),
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+      );
+    } else {
+      try {
+        final file = File(Uri.parse(image).toFilePath());
+        if (file.existsSync()) {
+          return Image.file(
+            file,
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+          );
+        } else {
+          return Image.memory(
+            base64Decode(image.split(',').last),
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+          );
+        }
+      } catch (e) {
+        return const Icon(Icons.broken_image);
+      }
+    }
   }
 }
