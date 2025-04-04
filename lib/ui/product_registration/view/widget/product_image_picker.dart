@@ -44,16 +44,18 @@ class ProductImagePicker extends StatelessWidget {
           fit: BoxFit.cover,
           errorBuilder: (_, __, ___) => const Center(child: Text('이미지 로드 실패')),
         );
-      } else {
-        // 로컬 파일 이미지
+      } else if (File(imagePath!).existsSync()) {
+        // 로컬 파일이 실제 존재하는 경우만
         imageWidget = Image.file(
           File(imagePath!),
           key: ValueKey(imagePath),
-
           width: double.infinity,
           height: 150,
           fit: BoxFit.cover,
         );
+      } else {
+        // 포맷 알 수 없음 or 파일 없음
+        imageWidget = const Center(child: Text('지원하지 않는 이미지 형식'));
       }
     } else {
       imageWidget = const Center(child: Text('Image 선택'));
