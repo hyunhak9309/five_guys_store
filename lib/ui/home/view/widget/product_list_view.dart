@@ -55,7 +55,15 @@ class ProductListView extends StatelessWidget {
   }
 
   Widget getImageWidget(String image) {
-    if (image.startsWith('http')) {
+    if (image.startsWith('data:image')) {
+      return Image.memory(
+        base64Decode(image.split(',').last),
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+      );
+    } else if (image.startsWith('http')) {
       return Image.network(
         image,
         width: 60,
@@ -83,6 +91,7 @@ class ProductListView extends StatelessWidget {
             errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
           );
         } else {
+          // Fallback: base64 시도
           return Image.memory(
             base64Decode(image.split(',').last),
             width: 60,
@@ -92,7 +101,18 @@ class ProductListView extends StatelessWidget {
           );
         }
       } catch (e) {
-        return const Icon(Icons.broken_image);
+        // fallback 처리
+        try {
+          return Image.memory(
+            base64Decode(image.split(',').last),
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+          );
+        } catch (_) {
+          return const Icon(Icons.broken_image);
+        }
       }
     }
   }
