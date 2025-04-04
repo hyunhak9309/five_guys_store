@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fiveguysstore/ui/home/view_model/home_view_model.dart';
 import 'package:fiveguysstore/ui/product_registration/view/widget/product_image_picker.dart';
 import 'package:fiveguysstore/ui/product_registration/view/widget/product_text_field.dart';
@@ -47,7 +49,10 @@ class ProductRegistrationPage extends HookConsumerWidget {
                         source: ImageSource.gallery,
                       );
                       if (pickedFile != null) {
-                        productImagePath.value = pickedFile.path;
+                        final bytes = await pickedFile.readAsBytes();
+                        final base64Image = base64Encode(bytes);
+                        productImagePath.value =
+                            'data:image/jpeg;base64,$base64Image';
                       }
                     },
                   ),
