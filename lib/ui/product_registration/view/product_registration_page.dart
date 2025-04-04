@@ -45,14 +45,34 @@ class ProductRegistrationPage extends HookConsumerWidget {
                     title: const Text('갤러리에서 선택'),
                     onTap: () async {
                       context.pop();
-                      final pickedFile = await picker.pickImage(
-                        source: ImageSource.gallery,
-                      );
-                      if (pickedFile != null) {
-                        final bytes = await pickedFile.readAsBytes();
-                        final base64Image = base64Encode(bytes);
-                        productImagePath.value =
-                            'data:image/jpeg;base64,$base64Image';
+
+                      try {
+                        final pickedFile = await picker.pickImage(
+                          source: ImageSource.gallery,
+                        );
+                        if (pickedFile != null) {
+                          final bytes = await pickedFile.readAsBytes();
+
+                          // MIME 타입 추정 (확장자 보고)
+                          final extension =
+                              pickedFile.path.split('.').last.toLowerCase();
+                          String mimeType = 'image/jpeg'; // 기본값
+
+                          if (extension == 'png') {
+                            mimeType = 'image/png';
+                          } else if (extension == 'webp') {
+                            mimeType = 'image/webp';
+                          }
+
+                          final base64Image = base64Encode(bytes);
+                          productImagePath.value =
+                              'data:$mimeType;base64,$base64Image';
+                        }
+                      } catch (e) {
+                        // 예외 처리 추가
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('이미지를 불러오는 데 실패했어요.')),
+                        );
                       }
                     },
                   ),
