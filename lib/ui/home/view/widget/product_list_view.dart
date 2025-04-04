@@ -101,7 +101,7 @@ class ProductListView extends StatelessWidget {
           );
         }
       } catch (e) {
-        // fallback 처리
+        // fallback 처리.
         try {
           return Image.memory(
             base64Decode(image.split(',').last),
