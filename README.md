@@ -42,7 +42,7 @@ lib/
 ├── main_detail.dart          # 앱 진입점
 └── main.dart                 # 라우터 및 설정
 ```
-(![image](https://github.com/user-attachments/assets/2e432b0d-e19c-4e59-a884-5ea05d3317c2))
+![image](https://github.com/user-attachments/assets/2e432b0d-e19c-4e59-a884-5ea05d3317c2)
 
 📁📁 main.dart가 앱 진입점입니다.
 
