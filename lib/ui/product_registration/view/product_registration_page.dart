@@ -81,10 +81,12 @@ class ProductRegistrationPage extends HookConsumerWidget {
                     title: const Text('랜덤 이미지 가져오기'),
                     onTap: () async {
                       Navigator.of(context).pop();
-                      // Unsplash 랜덤 이미지 URL
-                      final randomImageUrl =
-                          'https://picsum.photos/600/400?random=${DateTime.now().millisecondsSinceEpoch}';
-                      productImagePath.value = randomImageUrl;
+                      // 0~999 사이의 ID를 랜덤으로 생성
+                      final randomId =
+                          DateTime.now().millisecondsSinceEpoch % 1000;
+                      final fixedImageUrl =
+                          'https://picsum.photos/id/$randomId/600/400';
+                      productImagePath.value = fixedImageUrl;
                     },
                   ),
                 ],
