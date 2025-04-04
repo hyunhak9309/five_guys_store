@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fiveguysstore/ui/home/view_model/home_view_model.dart';
 import 'package:fiveguysstore/ui/product_registration/view/widget/product_image_picker.dart';
 import 'package:fiveguysstore/ui/product_registration/view/widget/product_text_field.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class ProductRegistrationPage extends HookConsumerWidget {
   const ProductRegistrationPage({super.key});
@@ -43,11 +46,34 @@ class ProductRegistrationPage extends HookConsumerWidget {
                     title: const Text('갤러리에서 선택'),
                     onTap: () async {
                       context.pop();
-                      final pickedFile = await picker.pickImage(
-                        source: ImageSource.gallery,
-                      );
-                      if (pickedFile != null) {
-                        productImagePath.value = pickedFile.path;
+
+                      try {
+                        final pickedFile = await picker.pickImage(
+                          source: ImageSource.gallery,
+                        );
+                        if (pickedFile != null) {
+                          final bytes = await pickedFile.readAsBytes();
+
+                          // MIME 타입 추정 (확장자 보고)
+                          final extension =
+                              pickedFile.path.split('.').last.toLowerCase();
+                          String mimeType = 'image/jpeg'; // 기본값
+
+                          if (extension == 'png') {
+                            mimeType = 'image/png';
+                          } else if (extension == 'webp') {
+                            mimeType = 'image/webp';
+                          }
+
+                          final base64Image = base64Encode(bytes);
+                          productImagePath.value =
+                              'data:$mimeType;base64,$base64Image';
+                        }
+                      } catch (e) {
+                        // 예외 처리 추가
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('이미지를 불러오는 데 실패했어요.')),
+                        );
                       }
                     },
                   ),
@@ -56,10 +82,28 @@ class ProductRegistrationPage extends HookConsumerWidget {
                     title: const Text('랜덤 이미지 가져오기'),
                     onTap: () async {
                       Navigator.of(context).pop();
-                      // Unsplash 랜덤 이미지 URL
-                      final randomImageUrl =
-                          'https://picsum.photos/600/400?random=${DateTime.now().millisecondsSinceEpoch}';
-                      productImagePath.value = randomImageUrl;
+
+                      final randomId =
+                          DateTime.now().millisecondsSinceEpoch % 1000;
+                      final imageUrl =
+                          'https://picsum.photos/id/$randomId/600/400';
+
+                      try {
+                        final response = await http.get(Uri.parse(imageUrl));
+                        if (response.statusCode == 200) {
+                          final base64Image = base64Encode(response.bodyBytes);
+                          productImagePath.value =
+                              'data:image/jpeg;base64,$base64Image';
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('이미지 다운로드 실패')),
+                          );
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('이미지 다운로드 중 오류 발생')),
+                        );
+                      }
                     },
                   ),
                 ],
