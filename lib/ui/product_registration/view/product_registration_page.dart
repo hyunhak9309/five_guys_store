@@ -9,6 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class ProductRegistrationPage extends HookConsumerWidget {
   const ProductRegistrationPage({super.key});
@@ -81,12 +82,28 @@ class ProductRegistrationPage extends HookConsumerWidget {
                     title: const Text('랜덤 이미지 가져오기'),
                     onTap: () async {
                       Navigator.of(context).pop();
-                      // 0~999 사이의 ID를 랜덤으로 생성
+
                       final randomId =
                           DateTime.now().millisecondsSinceEpoch % 1000;
-                      final fixedImageUrl =
+                      final imageUrl =
                           'https://picsum.photos/id/$randomId/600/400';
-                      productImagePath.value = fixedImageUrl;
+
+                      try {
+                        final response = await http.get(Uri.parse(imageUrl));
+                        if (response.statusCode == 200) {
+                          final base64Image = base64Encode(response.bodyBytes);
+                          productImagePath.value =
+                              'data:image/jpeg;base64,$base64Image';
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('이미지 다운로드 실패')),
+                          );
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('이미지 다운로드 중 오류 발생')),
+                        );
+                      }
                     },
                   ),
                 ],
