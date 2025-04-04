@@ -1,7 +1,7 @@
 import 'package:fiveguysstore/ui/home/view_model/home_view_model.dart';
-import 'package:fiveguysstore/ui/product_registration/widget/product_image_picker.dart';
-import 'package:fiveguysstore/ui/product_registration/widget/product_text_field.dart';
-import 'package:fiveguysstore/ui/product_registration/widget/register_button.dart';
+import 'package:fiveguysstore/ui/product_registration/view/widget/product_image_picker.dart';
+import 'package:fiveguysstore/ui/product_registration/view/widget/product_text_field.dart';
+import 'package:fiveguysstore/ui/product_registration/view/widget/register_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -151,20 +151,24 @@ class ProductRegistrationPage extends HookConsumerWidget {
       return null;
     }, []);
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          '상품 등록',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: () => context.pop(),
+          ),
+          centerTitle: true,
+          title: const Text(
+            '상품 등록',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.blue,
+          scrolledUnderElevation: 0,
         ),
-        backgroundColor: Colors.blue,
-        scrolledUnderElevation: 0,
-      ),
-
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(), // 빈 공간 터치 시 키보드 닫기
-        child: SingleChildScrollView(
+        body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
@@ -180,7 +184,6 @@ class ProductRegistrationPage extends HookConsumerWidget {
                 errorText: nameError.value,
               ),
               const SizedBox(height: 12),
-
               ProductTextField(
                 controller: priceController,
                 label: '상품 가격',
@@ -188,14 +191,12 @@ class ProductRegistrationPage extends HookConsumerWidget {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 12),
-
               ProductTextField(
                 controller: descriptionController,
                 label: '상품 설명',
                 errorText: descriptionError.value,
                 maxLines: 4,
               ),
-
               const SizedBox(height: 24),
               RegisterButton(onPressed: registerProduct),
             ],
