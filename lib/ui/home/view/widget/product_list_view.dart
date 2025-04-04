@@ -45,7 +45,9 @@ class ProductListView extends StatelessWidget {
                             'file://',
                           ) // file로 시작하면 Image.file() 사용
                           ? Image.file(
-                            File(product.image.replaceFirst('file://', '')),
+                            File(
+                              Uri.parse(product.image).path,
+                            ), // split 형태가 아닌, URI 파싱 형태로 변경
                             width: 60,
                             height: 60,
                             fit: BoxFit.cover,
