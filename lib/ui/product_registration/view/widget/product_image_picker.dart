@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-class ProductImagePicker extends StatelessWidget {
+class ProductImagePicker extends StatefulWidget {
   final String? imagePath;
   final String? errorText;
   final VoidCallback onTap;
@@ -14,46 +14,54 @@ class ProductImagePicker extends StatelessWidget {
     this.errorText,
   });
 
-  bool _isBase64Image(String path) => path.startsWith('data:image');
-  bool _isNetworkImage(String path) => path.startsWith('http');
-  bool _isLocalFileImage(String path) {
-    try {
-      return File(path).existsSync();
-    } catch (_) {
-      return false;
+  @override
+  State<ProductImagePicker> createState() => _ProductImagePickerState();
+}
+
+class _ProductImagePickerState extends State<ProductImagePicker> {
+  late Widget imageWidget;
+
+  @override
+  void didUpdateWidget(covariant ProductImagePicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.imagePath != widget.imagePath) {
+      _buildImage();
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    Widget imageWidget;
+  void initState() {
+    super.initState();
+    _buildImage();
+  }
 
+  void _buildImage() {
     try {
-      if (imagePath != null) {
-        if (_isBase64Image(imagePath!)) {
-          final base64Str = imagePath!.split(',').last;
+      if (widget.imagePath != null) {
+        if (widget.imagePath!.startsWith('data:image')) {
+          final base64Str = widget.imagePath!.split(',').last;
           final bytes = base64Decode(base64Str);
           imageWidget = Image.memory(
             bytes,
-            key: ValueKey(imagePath),
+            key: const ValueKey('memory'),
             width: double.infinity,
             height: 150,
             fit: BoxFit.cover,
           );
-        } else if (_isNetworkImage(imagePath!)) {
+        } else if (widget.imagePath!.startsWith('http')) {
           imageWidget = Image.network(
-            imagePath!,
-            key: ValueKey(imagePath),
+            widget.imagePath!,
+            key: const ValueKey('network'),
             width: double.infinity,
             height: 150,
             fit: BoxFit.cover,
             errorBuilder:
                 (_, __, ___) => const Center(child: Text('이미지 로드 실패')),
           );
-        } else if (_isLocalFileImage(imagePath!)) {
+        } else if (File(widget.imagePath!).existsSync()) {
           imageWidget = Image.file(
-            File(imagePath!),
-            key: ValueKey(imagePath),
+            File(widget.imagePath!),
+            key: const ValueKey('file'),
             width: double.infinity,
             height: 150,
             fit: BoxFit.cover,
@@ -67,12 +75,15 @@ class ProductImagePicker extends StatelessWidget {
     } catch (e) {
       imageWidget = const Center(child: Text('이미지 처리 중 오류 발생'));
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
-          onTap: onTap,
+          onTap: widget.onTap,
           child: Container(
             height: 300,
             width: double.infinity,
@@ -83,12 +94,12 @@ class ProductImagePicker extends StatelessWidget {
             ),
           ),
         ),
-        if (errorText != null)
+        if (widget.errorText != null)
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              errorText!,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
+              widget.errorText!,
+              style: const TextStyle(color: Colors.red),
             ),
           ),
       ],
