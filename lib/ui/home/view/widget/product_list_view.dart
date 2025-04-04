@@ -41,13 +41,21 @@ class ProductListView extends StatelessWidget {
                             height: 60,
                             fit: BoxFit.cover,
                           )
-                          : product.image.startsWith(
-                            'file://',
-                          ) // file로 시작하면 Image.file() 사용
+                          : product.image.startsWith('file://') ||
+                              product.image.startsWith(
+                                '/',
+                              ) // file 또는 /로 시작하면 Image.file() 사용. 플랫폼별 구분하려다가 코드가 길어지는 것 같아 이걸로 대체함.
                           ? Image.file(
-                            File(
-                              Uri.parse(product.image).path,
-                            ), // split 형태가 아닌, URI 파싱 형태로 변경
+                            // File(
+                            // Platform.isIOS
+                            // ? Uri.parse(
+                            // product.image,
+                            // ).path.replaceFirst('file://', '')
+                            // : Uri.parse(
+                            // product.image,
+                            // ).path,
+                            // ),
+                            File(Uri.parse(product.image).toFilePath()),
                             width: 60,
                             height: 60,
                             fit: BoxFit.cover,
