@@ -31,7 +31,36 @@ class ProductListView extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: getImageWidget(product.image),
+                  child:
+                      product.image.startsWith(
+                            'http',
+                          ) // http로 시작하면 Image.network() 사용
+                          ? Image.network(
+                            product.image,
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          )
+                          : product.image.startsWith(
+                            'file://',
+                          ) // file로 시작하면 Image.file() 사용
+                          ? Image.file(
+                            File(
+                              Uri.parse(product.image).path,
+                            ), // split 형태가 아닌, URI 파싱 형태로 변경
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          )
+                          : Image.memory(
+                            // 그 외는 Image.memory() 사용 (base64)
+                            base64Decode(product.image.split(',').last),
+                            // 이미지 파일이 base64(문자열)로 되어있어, 이를 디코딩함. convert 임포팅
+                            // data:image/jpeg;base64, 를 잘라내기 위해 split 사용
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          ),
                 ),
                 SizedBox(width: 16),
                 Expanded(
@@ -52,68 +81,5 @@ class ProductListView extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget getImageWidget(String image) {
-    if (image.startsWith('data:image')) {
-      return Image.memory(
-        base64Decode(image.split(',').last),
-        width: 60,
-        height: 60,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-      );
-    } else if (image.startsWith('http')) {
-      return Image.network(
-        image,
-        width: 60,
-        height: 60,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-      );
-    } else if (image.startsWith('content://')) {
-      return Image.file(
-        File.fromUri(Uri.parse(image)),
-        width: 60,
-        height: 60,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-      );
-    } else {
-      try {
-        final file = File(Uri.parse(image).toFilePath());
-        if (file.existsSync()) {
-          return Image.file(
-            file,
-            width: 60,
-            height: 60,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-          );
-        } else {
-          // Fallback: base64 시도
-          return Image.memory(
-            base64Decode(image.split(',').last),
-            width: 60,
-            height: 60,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-          );
-        }
-      } catch (e) {
-        // fallback 처리
-        try {
-          return Image.memory(
-            base64Decode(image.split(',').last),
-            width: 60,
-            height: 60,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-          );
-        } catch (_) {
-          return const Icon(Icons.broken_image);
-        }
-      }
-    }
   }
 }

@@ -20,7 +20,7 @@ class HomePage extends ConsumerWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Home',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
