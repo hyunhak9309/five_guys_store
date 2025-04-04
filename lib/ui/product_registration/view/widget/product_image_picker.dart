@@ -26,6 +26,7 @@ class ProductImagePicker extends StatelessWidget {
           final bytes = base64Decode(base64Str);
           imageWidget = Image.memory(
             bytes,
+            key: ValueKey(imagePath),
             width: double.infinity,
             height: 150,
             fit: BoxFit.cover,
@@ -37,6 +38,7 @@ class ProductImagePicker extends StatelessWidget {
         // 네트워크 이미지
         imageWidget = Image.network(
           imagePath!,
+          key: ValueKey(imagePath),
           width: double.infinity,
           height: 150,
           fit: BoxFit.cover,
@@ -46,6 +48,8 @@ class ProductImagePicker extends StatelessWidget {
         // 로컬 파일 이미지
         imageWidget = Image.file(
           File(imagePath!),
+          key: ValueKey(imagePath),
+
           width: double.infinity,
           height: 150,
           fit: BoxFit.cover,
