@@ -50,8 +50,9 @@ lib/
 ---
 
 ### 💡 이해도 및 직관성
-- 변수명과 함수명은 `buildSeatBox`, `selectedSeat` 등 기능 기반 직관적으로 구현
-- 모든 주요 함수에는 주석 추가로 가독성 향상
+- 변수명과 함수명은 `updateProductNum`, `showPurchaseDialog` 등 기능 중심으로 명확하게 작성 
+- `product.image`, `product.description` 등 `ProductEntity`의 속성을 일관되게 사용
+- 주요 함수에는 주석을 통해 기능 설명을 명확히 표기하여 가독성을 높임
 
 ---
 
