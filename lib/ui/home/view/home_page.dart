@@ -1,6 +1,7 @@
 import 'package:fiveguysstore/ui/core/view/c_inkwell.dart';
 import 'package:fiveguysstore/ui/home/view/widget/cart_icon.dart';
 import 'package:fiveguysstore/ui/home/view/widget/product_list_view.dart';
+import 'package:fiveguysstore/ui/home/view/widget/recommend_list.dart';
 import 'package:fiveguysstore/ui/home/view_model/home_view_model.dart';
 import 'package:fiveguysstore/ui/product_registration/view/product_registration_page.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,12 @@ class HomePage extends ConsumerWidget {
             (products) =>
                 products.isEmpty
                     ? const Center(child: Text('상품이 없습니다.'))
-                    : ProductListView(products: products),
+                    : Column(
+                        children: [
+                          const RecommendList(),
+                          Expanded(child: ProductListView(products: products)),
+                        ],
+                    ),
         error: (error, stack) => Center(child: Text('Error: $error')),
         loading:
             () => Center(
