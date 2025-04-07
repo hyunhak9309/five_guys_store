@@ -71,6 +71,7 @@ class ProductRegistrationPage extends HookConsumerWidget {
                         }
                       } catch (e) {
                         // 예외 처리 추가
+                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('이미지를 불러오는 데 실패했어요.')),
                         );
@@ -95,11 +96,13 @@ class ProductRegistrationPage extends HookConsumerWidget {
                           productImagePath.value =
                               'data:image/jpeg;base64,$base64Image';
                         } else {
+                          // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('이미지 다운로드 실패')),
                           );
                         }
                       } catch (e) {
+                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('이미지 다운로드 중 오류 발생')),
                         );

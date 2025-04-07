@@ -22,7 +22,7 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Home',
+          '5Guys Store',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue, // 배경색 blue
